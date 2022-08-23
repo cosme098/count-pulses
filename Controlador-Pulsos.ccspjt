@@ -1,0 +1,110 @@
+[PROJECT]
+Target=Controlador-Pulsos.hex
+Processor_Text=PIC16F876
+CCSVerions=5.025
+Compiler=PCM
+CCSVersion=5.025
+[Target Data]
+FileList=Controlador-Pulsos.c
+[Directories]
+Include=
+[C:\Users\franc\Desktop\Controlador-Pulsos\Controlador-Pulsos]
+Type=4
+[mru-list]
+1=Controlador-Pulsos.c
+
+[ProjectLog]
+Days=6
+D1=06-08-2022
+D1_L=16
+D1_L1=[79706]Project Opened.
+D1_L2=[80057]Project Closed.
+D1_L3=[80364]Project Opened.
+D1_L4=[80368]Started Editing.
+D1_L5=[80722]Stopped Editing.
+D1_L6=[81034]Started Editing.
+D1_L7=[81735]Stopped Editing.
+D1_L8=[84033]Started Editing.
+D1_L9=[85185]Stopped Editing.
+D1_L10=[85530]Started Editing.
+D1_L11=[85835]Stopped Editing.
+D1_L12=[85922]Started Editing.
+D1_L13=[86161]Stopped Editing.
+TotalEdit=133
+TotalDebug=0
+D1_E=26
+D1_D=0
+D1_L14=[86164]Project Closed.
+D1_L15=[86278]Project Opened.
+D1_L16=[86345]Started Editing.
+D2=07-08-2022
+D2_L=4
+D2_L1=[1577]Stopped Editing.
+D2_L2=[65051]Started Editing.
+D2_L3=[65054]Stopped Editing.
+D2_E=23
+D2_D=0
+D2_L4=[65054]Project Closed.
+D3=08-08-2022
+D3_L=11
+D3_L1=[50183]Project Opened.
+D3_L2=[50232]Started Editing.
+D3_L3=[51849]Stopped Editing.
+D3_L4=[51917]Started Editing.
+D3_L5=[52909]Stopped Editing.
+D3_L6=[56112]Started Editing.
+D3_L7=[56468]Stopped Editing.
+D3_E=35
+D3_D=0
+D3_L8=[61955]Project Closed.
+D3_L9=[69546]Project Opened.
+D3_L10=[69556]Started Editing.
+D3_L11=[69868]Stopped Editing.
+D4=09-08-2022
+D4_L=3
+D4_L1=[32192]Started Editing.
+D4_L2=[32232]Stopped Editing.
+D4_E=1
+D4_D=0
+D4_L3=[32232]Project Closed.
+D5=12-08-2022
+D5_L=14
+D5_L1=[40305]Project Opened.
+D5_L2=[40571]Started Editing.
+D5_L3=[40591]Stopped Editing.
+D5_E=18
+D5_D=0
+D5_L4=[40591]Project Closed.
+D5_L5=[40711]Project Opened.
+D5_L6=[41097]Started Editing.
+D5_L7=[41529]Stopped Editing.
+D5_L8=[41758]Started Editing.
+D5_L9=[42371]Stopped Editing.
+D5_L10=[42396]Started Editing.
+D5_L11=[42869]Stopped Editing.
+D5_L12=[43239]Started Editing.
+D5_L13=[43603]Stopped Editing.
+D5_L14=[43603]Project Closed.
+D6=20-08-2022
+D6_L=8
+D6_L1=[63533]Project Opened.
+D6_L2=[63603]Started Editing.
+D6_L3=[64402]Stopped Editing.
+D6_E=30
+D6_D=0
+D6_L4=[64402]Project Closed.
+D6_L5=[66421]Project Opened.
+D6_L6=[66471]Started Editing.
+D6_L7=[67391]Stopped Editing.
+D6_L8=[67391]Project Closed.
+
+[Opened Files]
+1=Controlador-Pulsos.c
+2=Controlador-Pulsos.h
+3=
+4=
+[Controlador-Pulsos.c]
+Type=4
+[Units]
+Count=1
+1=Controlador-Pulsos (main)

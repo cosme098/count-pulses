@@ -1,0 +1,387 @@
+CCS PCM C Compiler, Version 5.025, 47561               20-ago-22 18:43
+
+               Filename:   C:\Users\franc\Desktop\Controlador-Pulsos\Controlador-Pulsos.lst
+
+               ROM used:   251 words (3%)
+                           Largest free fragment is 2048
+               RAM used:   10 (3%) at main() level
+                           12 (3%) worst case
+               Stack used: 1 locations
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   069
+0003:  NOP
+.................... #include <Controlador-Pulsos.h> 
+.................... #include <16F876.h> 
+.................... //////////// Standard Header file for the PIC16F876 device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F876 
+....................  
+.................... #list 
+....................  
+.................... #device ADC=16 
+....................  
+.................... #FUSES NOWDT                    //No Watch Dog Timer 
+.................... #FUSES NOBROWNOUT               //No brownout reset 
+.................... #FUSES NOLVP                    //No low voltage prgming, B3(PIC16) or B5(PIC18) used for I/O 
+....................  
+.................... #use delay(crystal=20000000) 
+0004:  MOVLW  26
+0005:  MOVWF  04
+0006:  BCF    03.7
+0007:  MOVF   00,W
+0008:  BTFSC  03.2
+0009:  GOTO   017
+000A:  MOVLW  06
+000B:  MOVWF  78
+000C:  CLRF   77
+000D:  DECFSZ 77,F
+000E:  GOTO   00D
+000F:  DECFSZ 78,F
+0010:  GOTO   00C
+0011:  MOVLW  7B
+0012:  MOVWF  77
+0013:  DECFSZ 77,F
+0014:  GOTO   013
+0015:  DECFSZ 00,F
+0016:  GOTO   00A
+0017:  RETURN
+.................... #define BT_DEC   PIN_B5 
+.................... #define BT_INC   PIN_B6 
+.................... #define BT_MODE   PIN_B7 
+.................... #define BT_CHANGE_ROT PIN_C0 
+....................  
+.................... #define BT_START_STOP   PIN_B0 
+.................... #define OUT_CLK   PIN_B1 
+.................... #define OUT_CHANGE_ROT   PIN_C1 
+.................... #define OUT_CLK_ENA   PIN_B2 
+.................... #define OUT_DRV_ENA   PIN_B3 
+.................... #define OUT_MODE   PIN_B4 
+.................... #define OUT_STATUS   PIN_C7 
+....................  
+.................... #define DEBOUCE_BUTTON_TIME 50 
+.................... #define TIME_BEFORE_STOP 1000 
+.................... #define TIME_AFTER_STOP 2000 
+....................  
+....................  
+.................... int pulse_count = 3200; 
+.................... int mode = 0; 
+.................... int started = 0; 
+....................  
+....................  
+.................... void ihm_buttons() { 
+....................     if(!input(BT_INC)) { 
+0018:  BSF    03.5
+0019:  BSF    06.6
+001A:  BCF    03.5
+001B:  BTFSC  06.6
+001C:  GOTO   02D
+....................         output_high(OUT_STATUS); 
+001D:  BCF    23.7
+001E:  MOVF   23,W
+001F:  BSF    03.5
+0020:  MOVWF  07
+0021:  BCF    03.5
+0022:  BSF    07.7
+....................         delay_ms(DEBOUCE_BUTTON_TIME); 
+0023:  MOVLW  32
+0024:  MOVWF  26
+0025:  CALL   004
+....................         output_low(OUT_STATUS); 
+0026:  BCF    23.7
+0027:  MOVF   23,W
+0028:  BSF    03.5
+0029:  MOVWF  07
+002A:  BCF    03.5
+002B:  BCF    07.7
+....................         pulse_count++; 
+002C:  INCF   20,F
+....................     } 
+....................      
+....................     if(!input(BT_DEC)) { 
+002D:  BSF    03.5
+002E:  BSF    06.5
+002F:  BCF    03.5
+0030:  BTFSC  06.5
+0031:  GOTO   042
+....................         output_high(OUT_STATUS); 
+0032:  BCF    23.7
+0033:  MOVF   23,W
+0034:  BSF    03.5
+0035:  MOVWF  07
+0036:  BCF    03.5
+0037:  BSF    07.7
+....................         delay_ms(DEBOUCE_BUTTON_TIME); 
+0038:  MOVLW  32
+0039:  MOVWF  26
+003A:  CALL   004
+....................         output_low(OUT_STATUS); 
+003B:  BCF    23.7
+003C:  MOVF   23,W
+003D:  BSF    03.5
+003E:  MOVWF  07
+003F:  BCF    03.5
+0040:  BCF    07.7
+....................         pulse_count--; 
+0041:  DECF   20,F
+....................     } 
+....................      
+....................     if(!input(BT_MODE)) { 
+0042:  BSF    03.5
+0043:  BSF    06.7
+0044:  BCF    03.5
+0045:  BTFSC  06.7
+0046:  GOTO   066
+....................         output_high(OUT_STATUS); 
+0047:  BCF    23.7
+0048:  MOVF   23,W
+0049:  BSF    03.5
+004A:  MOVWF  07
+004B:  BCF    03.5
+004C:  BSF    07.7
+....................         delay_ms(DEBOUCE_BUTTON_TIME); 
+004D:  MOVLW  32
+004E:  MOVWF  26
+004F:  CALL   004
+....................         output_low(OUT_STATUS); 
+0050:  BCF    23.7
+0051:  MOVF   23,W
+0052:  BSF    03.5
+0053:  MOVWF  07
+0054:  BCF    03.5
+0055:  BCF    07.7
+....................         if (mode == 0) { 
+0056:  MOVF   21,F
+0057:  BTFSS  03.2
+0058:  GOTO   05C
+....................             mode = 1; 
+0059:  MOVLW  01
+005A:  MOVWF  21
+....................         } else { 
+005B:  GOTO   05D
+....................             mode = 0; 
+005C:  CLRF   21
+....................         } 
+....................          
+....................         output_bit(OUT_MODE, mode); 
+005D:  MOVF   21,F
+005E:  BTFSS  03.2
+005F:  GOTO   062
+0060:  BCF    06.4
+0061:  GOTO   063
+0062:  BSF    06.4
+0063:  BSF    03.5
+0064:  BCF    06.4
+0065:  BCF    03.5
+....................     } 
+0066:  BCF    0A.3
+0067:  BCF    0A.4
+0068:  GOTO   0F8 (RETURN)
+.................... } 
+....................  
+.................... void main() 
+0069:  MOVF   03,W
+006A:  ANDLW  1F
+006B:  MOVWF  03
+006C:  MOVLW  80
+006D:  MOVWF  20
+006E:  CLRF   21
+006F:  CLRF   22
+0070:  MOVLW  FF
+0071:  MOVWF  23
+0072:  BSF    03.5
+0073:  BSF    1F.0
+0074:  BSF    1F.1
+0075:  BSF    1F.2
+0076:  BCF    1F.3
+0077:  BCF    03.7
+.................... { 
+....................     output_low(OUT_CLK_ENA); 
+0078:  BCF    06.2
+0079:  BCF    03.5
+007A:  BCF    06.2
+....................     output_low(OUT_DRV_ENA); 
+007B:  BSF    03.5
+007C:  BCF    06.3
+007D:  BCF    03.5
+007E:  BCF    06.3
+....................     output_low(OUT_STATUS); 
+007F:  BCF    23.7
+0080:  MOVF   23,W
+0081:  BSF    03.5
+0082:  MOVWF  07
+0083:  BCF    03.5
+0084:  BCF    07.7
+....................     output_low(OUT_CHANGE_ROT); 
+0085:  BCF    23.1
+0086:  MOVF   23,W
+0087:  BSF    03.5
+0088:  MOVWF  07
+0089:  BCF    03.5
+008A:  BCF    07.1
+....................  
+....................     while(TRUE) 
+....................     { 
+....................         if(!input(BT_CHANGE_ROT)){ 
+008B:  BSF    23.0
+008C:  MOVF   23,W
+008D:  BSF    03.5
+008E:  MOVWF  07
+008F:  BCF    03.5
+0090:  BTFSC  07.0
+0091:  GOTO   09C
+....................             delay_ms(25); 
+0092:  MOVLW  19
+0093:  MOVWF  26
+0094:  CALL   004
+....................             output_toggle(OUT_CHANGE_ROT); 
+0095:  BCF    23.1
+0096:  MOVF   23,W
+0097:  BSF    03.5
+0098:  MOVWF  07
+0099:  MOVLW  02
+009A:  BCF    03.5
+009B:  XORWF  07,F
+....................          } 
+....................         if(input(BT_CHANGE_ROT)){ 
+009C:  BSF    23.0
+009D:  MOVF   23,W
+009E:  BSF    03.5
+009F:  MOVWF  07
+00A0:  BCF    03.5
+00A1:  BTFSS  07.0
+00A2:  GOTO   0AD
+....................             delay_ms(25); 
+00A3:  MOVLW  19
+00A4:  MOVWF  26
+00A5:  CALL   004
+....................             output_toggle(OUT_CHANGE_ROT); 
+00A6:  BCF    23.1
+00A7:  MOVF   23,W
+00A8:  BSF    03.5
+00A9:  MOVWF  07
+00AA:  MOVLW  02
+00AB:  BCF    03.5
+00AC:  XORWF  07,F
+....................          }  
+....................           
+....................         if (input(BT_START_STOP)){ 
+00AD:  BSF    03.5
+00AE:  BSF    06.0
+00AF:  BCF    03.5
+00B0:  BTFSS  06.0
+00B1:  GOTO   0BD
+....................             output_high(OUT_CLK_ENA); 
+00B2:  BSF    03.5
+00B3:  BCF    06.2
+00B4:  BCF    03.5
+00B5:  BSF    06.2
+....................             output_high(OUT_DRV_ENA); 
+00B6:  BSF    03.5
+00B7:  BCF    06.3
+00B8:  BCF    03.5
+00B9:  BSF    06.3
+....................             started = 1; 
+00BA:  MOVLW  01
+00BB:  MOVWF  22
+....................         } else { 
+00BC:  GOTO   0F9
+....................             output_low(OUT_CLK_ENA); 
+00BD:  BSF    03.5
+00BE:  BCF    06.2
+00BF:  BCF    03.5
+00C0:  BCF    06.2
+....................  
+....................             if (mode == 0 && started == 1) { 
+00C1:  MOVF   21,F
+00C2:  BTFSS  03.2
+00C3:  GOTO   0EE
+00C4:  DECFSZ 22,W
+00C5:  GOTO   0EE
+....................                delay_ms(TIME_BEFORE_STOP); 
+00C6:  MOVLW  04
+00C7:  MOVWF  25
+00C8:  MOVLW  FA
+00C9:  MOVWF  26
+00CA:  CALL   004
+00CB:  DECFSZ 25,F
+00CC:  GOTO   0C8
+....................                 
+....................                for(int i = 0; i < pulse_count; i++) { 
+00CD:  CLRF   24
+00CE:  MOVF   20,W
+00CF:  SUBWF  24,W
+00D0:  BTFSC  03.0
+00D1:  GOTO   0E7
+....................                   output_high(OUT_CLK); 
+00D2:  BSF    03.5
+00D3:  BCF    06.1
+00D4:  BCF    03.5
+00D5:  BSF    06.1
+....................                   delay_us(5); 
+00D6:  MOVLW  07
+00D7:  MOVWF  77
+00D8:  DECFSZ 77,F
+00D9:  GOTO   0D8
+00DA:  GOTO   0DB
+00DB:  NOP
+....................                   output_low(OUT_CLK); 
+00DC:  BSF    03.5
+00DD:  BCF    06.1
+00DE:  BCF    03.5
+00DF:  BCF    06.1
+....................                   delay_us(120); 
+00E0:  MOVLW  C7
+00E1:  MOVWF  77
+00E2:  DECFSZ 77,F
+00E3:  GOTO   0E2
+00E4:  GOTO   0E5
+00E5:  INCF   24,F
+00E6:  GOTO   0CE
+....................                } 
+....................                 
+....................                delay_ms(TIME_AFTER_STOP); 
+00E7:  MOVLW  08
+00E8:  MOVWF  25
+00E9:  MOVLW  FA
+00EA:  MOVWF  26
+00EB:  CALL   004
+00EC:  DECFSZ 25,F
+00ED:  GOTO   0E9
+....................             } 
+....................  
+....................             output_low(OUT_DRV_ENA); 
+00EE:  BSF    03.5
+00EF:  BCF    06.3
+00F0:  BCF    03.5
+00F1:  BCF    06.3
+....................  
+....................             while(!input(BT_START_STOP)) { 
+00F2:  BSF    03.5
+00F3:  BSF    06.0
+00F4:  BCF    03.5
+00F5:  BTFSC  06.0
+00F6:  GOTO   0F9
+....................                 ihm_buttons(); 
+00F7:  GOTO   018
+00F8:  GOTO   0F2
+....................             } 
+....................       } 
+00F9:  GOTO   08B
+....................    } 
+.................... } 
+00FA:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F32   HS NOWDT PUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT

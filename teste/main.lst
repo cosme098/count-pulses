@@ -1,0 +1,163 @@
+CCS PCM C Compiler, Version 5.025, 47561               06-ago-22 23:57
+
+               Filename:   C:\Users\franc\Desktop\Controlador-Pulsos\teste\main.lst
+
+               ROM used:   94 words (1%)
+                           Largest free fragment is 2048
+               RAM used:   12 (3%) at main() level
+                           12 (3%) worst case
+               Stack used: 1 locations (0 in main + 1 for interrupts)
+               Stack size: 8
+
+*
+0000:  MOVLW  00
+0001:  MOVWF  0A
+0002:  GOTO   040
+0003:  NOP
+0004:  MOVWF  7F
+0005:  SWAPF  03,W
+0006:  CLRF   03
+0007:  MOVWF  21
+0008:  MOVF   0A,W
+0009:  MOVWF  20
+000A:  CLRF   0A
+000B:  MOVF   04,W
+000C:  MOVWF  22
+000D:  MOVF   77,W
+000E:  MOVWF  23
+000F:  MOVF   78,W
+0010:  MOVWF  24
+0011:  MOVF   79,W
+0012:  MOVWF  25
+0013:  MOVF   7A,W
+0014:  MOVWF  26
+0015:  BCF    03.7
+0016:  BCF    03.5
+0017:  BTFSS  0B.5
+0018:  GOTO   01B
+0019:  BTFSC  0B.2
+001A:  GOTO   032
+001B:  MOVLW  8C
+001C:  MOVWF  04
+001D:  BTFSS  00.1
+001E:  GOTO   021
+001F:  BTFSC  0C.1
+0020:  GOTO   035
+0021:  MOVF   22,W
+0022:  MOVWF  04
+0023:  MOVF   23,W
+0024:  MOVWF  77
+0025:  MOVF   24,W
+0026:  MOVWF  78
+0027:  MOVF   25,W
+0028:  MOVWF  79
+0029:  MOVF   26,W
+002A:  MOVWF  7A
+002B:  MOVF   20,W
+002C:  MOVWF  0A
+002D:  SWAPF  21,W
+002E:  MOVWF  03
+002F:  SWAPF  7F,F
+0030:  SWAPF  7F,W
+0031:  RETFIE
+0032:  BCF    0A.3
+0033:  BCF    0A.4
+0034:  GOTO   038
+0035:  BCF    0A.3
+0036:  BCF    0A.4
+0037:  GOTO   03C
+.................... #include <main.h> 
+.................... #include <16F876.h> 
+.................... //////////// Standard Header file for the PIC16F876 device //////////////// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... ////        (C) Copyright 1996, 2013 Custom Computer Services          //// 
+.................... //// This source code may only be used by licensed users of the CCS C  //// 
+.................... //// compiler.  This source code may only be distributed to other      //// 
+.................... //// licensed users of the CCS C compiler.  No other use, reproduction //// 
+.................... //// or distribution is permitted without written permission.          //// 
+.................... //// Derivative programs created using this software in object code    //// 
+.................... //// form are not restricted in any way.                               //// 
+.................... /////////////////////////////////////////////////////////////////////////// 
+.................... #device PIC16F876 
+....................  
+.................... #list 
+....................  
+.................... #device ADC=16 
+....................  
+.................... #FUSES NOWDT                 	//No Watch Dog Timer 
+.................... #FUSES NOBROWNOUT            	//No brownout reset 
+.................... #FUSES NOLVP                 	//No low voltage prgming, B3(PIC16) or B5(PIC18) used for I/O 
+....................  
+.................... #use delay(crystal=25MHz) 
+....................  
+....................  
+....................  
+.................... #INT_RTCC 
+.................... void  RTCC_isr(void)  
+.................... { 
+....................  
+.................... } 
+....................  
+0038:  BCF    0B.2
+0039:  BCF    0A.3
+003A:  BCF    0A.4
+003B:  GOTO   021
+.................... #INT_TIMER2 
+.................... void  TIMER2_isr(void)  
+.................... { 
+....................  
+003C:  BCF    0C.1
+003D:  BCF    0A.3
+003E:  BCF    0A.4
+003F:  GOTO   021
+.................... } 
+....................  
+.................... void main() 
+0040:  MOVF   03,W
+0041:  ANDLW  1F
+0042:  MOVWF  03
+0043:  BSF    03.5
+0044:  BSF    1F.0
+0045:  BSF    1F.1
+0046:  BSF    1F.2
+0047:  BCF    1F.3
+0048:  BCF    03.7
+.................... { 
+.................... 	setup_timer_0(RTCC_INTERNAL|RTCC_DIV_8|RTCC_8_bit);		//327 us overflow 
+0049:  MOVF   01,W
+004A:  ANDLW  C0
+004B:  IORLW  02
+004C:  MOVWF  01
+.................... 	setup_timer_2(T2_DIV_BY_4,195,2);		//125 us overflow, 250 us interrupt 
+004D:  MOVLW  08
+004E:  MOVWF  78
+004F:  IORLW  05
+0050:  BCF    03.5
+0051:  MOVWF  12
+0052:  MOVLW  C3
+0053:  BSF    03.5
+0054:  MOVWF  12
+....................  
+....................  
+.................... 	enable_interrupts(INT_RTCC); 
+0055:  BCF    03.5
+0056:  BSF    0B.5
+.................... 	enable_interrupts(INT_TIMER2); 
+0057:  BSF    03.5
+0058:  BSF    0C.1
+.................... 	enable_interrupts(GLOBAL); 
+0059:  MOVLW  C0
+005A:  BCF    03.5
+005B:  IORWF  0B,F
+....................  
+.................... 	while(TRUE) 
+.................... 	{ 
+005C:  GOTO   05C
+.................... 		//TODO: User Code 
+.................... 	} 
+....................  
+.................... } 
+005D:  SLEEP
+
+Configuration Fuses:
+   Word  1: 3F32   HS NOWDT PUT NOBROWNOUT NOLVP NOCPD NOWRT NODEBUG NOPROTECT

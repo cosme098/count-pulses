@@ -1,0 +1,63 @@
+#include <Controlador-Pulsos.h>
+
+int pulse_count = 8000;
+int running = 0;
+
+#INT_EXT
+void  EXT_isr(void) 
+{
+   
+}
+
+/*#INT_TIMER2
+void  TIMER2_isr(void)
+{
+   output_high(OUT_CLK);
+   delay_us(62);
+   output_low(OUT_CLK);
+   delay_us(62);
+}*/
+
+void main()
+{
+   while(TRUE)
+   {
+      if (running == 1) {
+         for(int i = 0; i < pulse_count; i++) {
+            output_high(OUT_CLK);
+            delay_us(62);
+            output_low(OUT_CLK);
+            delay_us(62);
+         }
+      } else {
+         if(!input(BT_INC)) {
+            // delay_ms(450);
+            pulse_count++;
+         }
+         
+         if(!input(BT_DEC)) {
+            delay_ms(450);
+            pulse_count--;
+         }
+         
+         if(!input(BT_MODE)) {
+            delay_ms(DEBOUCE_BUTTON_TIME);
+            output_toggle(OUT_MODE);
+         }
+         
+         if(input(BT_MODE)) {
+            delay_ms(DEBOUCE_BUTTON_TIME);
+            
+            if (running == 0) {
+               running = 1;
+            } else {
+               running = 0;
+            }
+         }
+         
+         /*
+   
+   output_bit(OUT_ENA, running);*/
+      }
+   }
+}

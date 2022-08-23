@@ -1,0 +1,68 @@
+#include <Controlador-Pulsos.h>
+
+int pulse_count = 3200;
+int mode = 0;
+
+void ihm_buttons() {
+    if(!input(BT_INC)) {
+        output_high(OUT_STATUS);
+        delay_ms(DEBOUCE_BUTTON_TIME);
+        output_low(OUT_STATUS);
+        pulse_count++;
+    }
+    
+    if(!input(BT_DEC)) {
+        output_high(OUT_STATUS);
+        delay_ms(DEBOUCE_BUTTON_TIME);
+        output_low(OUT_STATUS);
+        pulse_count--;
+    }
+    
+    if(!input(BT_MODE)) {
+        output_high(OUT_STATUS);
+        delay_ms(DEBOUCE_BUTTON_TIME);
+        output_low(OUT_STATUS);
+        if (mode == 0) {
+            mode = 1;
+        } else {
+            mode = 0;
+        }
+        
+        output_bit(OUT_MODE, mode);
+    }
+}
+
+void main()
+{
+    output_low(OUT_CLK_ENA);
+    output_low(OUT_DRV_ENA);
+
+    while(TRUE)
+    {
+        if (input(BT_START_STOP)){
+            output_high(OUT_CLK_ENA);
+            output_high(OUT_DRV_ENA);
+        } else {
+            output_low(OUT_CLK_ENA);
+
+            if (mode == 0) {
+               delay_ms(TIME_BEFORE_STOP);
+               
+               for(int i = 0; i < pulse_count; i++) {
+                  output_high(OUT_CLK);
+                  delay_us(5);
+                  output_low(OUT_CLK);
+                  delay_us(120);
+               }
+               
+               delay_ms(TIME_AFTER_STOP);
+            }
+
+            output_low(OUT_DRV_ENA);
+
+            while(!input(BT_START_STOP)) {
+                ihm_buttons();
+            }
+      }
+   }
+}
